@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      
+      <ProjectReference Include="..\TestHQ.Core\TestHQ.Core.csproj" />
     </ItemGroup>
 
 </Project>
