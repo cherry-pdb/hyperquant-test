@@ -2,7 +2,7 @@
 
 public class BitfinexConfiguration
 {
-    public string BaseUrl { get; set; }
+    public string BaseUrl { get; init; }
     
-    public string WsUrl { get; set; }
+    public string WsUrl { get; init; }
 }
