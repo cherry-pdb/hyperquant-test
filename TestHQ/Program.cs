@@ -1,19 +1,32 @@
+using Serilog;
 using TestHQ.Core.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.Configure<BitfinexConfiguration>(builder.Configuration.GetSection(nameof(BitfinexConfiguration)));
+ConfigureServices(builder.Services, builder.Host);
+Configure(builder.Build());
 
-var app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
+void ConfigureServices(IServiceCollection services, IHostBuilder host)
 {
-    app.UseDeveloperExceptionPage();
+    services.AddControllers();
+    services.Configure<BitfinexConfiguration>(builder.Configuration.GetSection(nameof(BitfinexConfiguration)));
+    
+    host.UseSerilog((context, loggerConfiguration) =>
+    {
+        loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+    });
 }
 
-app.UseHttpsRedirection();
-app.UseRouting();
-app.MapControllers();
+void Configure(WebApplication app)
+{
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
 
-app.Run();
+    app.UseHttpsRedirection();
+    app.UseRouting();
+    app.MapControllers();
+
+    app.Run();
+}
