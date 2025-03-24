@@ -1,4 +1,4 @@
-﻿namespace TestHQ.Models;
+﻿namespace TestHQ.Core.Models;
 
 public class Trade
 {

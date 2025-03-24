@@ -1,4 +1,4 @@
-﻿using TestHQ.Models;
+﻿using TestHQ.Core.Models;
 
 namespace TestHQ.Core.Interfaces;
 
