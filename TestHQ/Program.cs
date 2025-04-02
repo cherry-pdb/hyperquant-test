@@ -1,6 +1,8 @@
 using Microsoft.OpenApi.Models;
 using Serilog;
+using TestHQ.Core.Clients;
 using TestHQ.Core.Configurations;
+using TestHQ.Core.Connector;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,10 @@ void ConfigureServices(IServiceCollection services, IHostBuilder host)
 {
     services.AddControllers();
     services.Configure<BitfinexConfiguration>(builder.Configuration.GetSection(nameof(BitfinexConfiguration)));
+    services.AddHttpClient<BitfinexRestClient>();
+    services.AddSingleton<BitfinexWebSocketClient>();
+    services.AddSingleton<ITestConnector, BitfinexConnector>();
+    
     services.AddSwaggerGen(options =>
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "TestHQ", Version = "v1" });
@@ -24,11 +30,11 @@ void ConfigureServices(IServiceCollection services, IHostBuilder host)
 
 void Configure(WebApplication app)
 {
-    if (!app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment())
     {
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
-        app.UseSwaggerUI(options => options.SwaggerEndpoint("v1/swagger.json", "SilverScreenSyndicate v1"));
+        app.UseSwaggerUI();
     }
 
     app.UseHttpsRedirection();
