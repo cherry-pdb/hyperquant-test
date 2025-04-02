@@ -28,14 +28,9 @@ public class Candle
     public decimal ClosePrice { get; set; }
 
     /// <summary>
-    /// Partial (Общая сумма сделок)
-    /// </summary>
-    public decimal TotalPrice { get; set; }
-
-    /// <summary>
     /// Partial (Общий объем)
     /// </summary>
-    public decimal TotalVolume { get; set; }
+    public decimal TotalVolume { get; set; } // I removed field TotalPrice because it isn't in response
 
     /// <summary>
     /// Время
