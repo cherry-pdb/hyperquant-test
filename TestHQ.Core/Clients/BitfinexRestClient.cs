@@ -49,5 +49,17 @@ public class BitfinexRestClient
         return candles;
     }
 
+    public async Task<Dictionary<string, decimal>> GetTickersAsync(string[] pairs)
+    {
+        var url = new UrlBuilder(_configuration.BaseUrl)
+            .AddPath("tickers")
+            .AddParameter("symbols", string.Join(",", pairs))
+            .Build();
+        var response = await _httpClient.GetStringAsync(url);
+        var prices = JsonConverter.ConvertTickersToPricesCollection(response);
+
+        return prices;
+    }
+
     #endregion
 }

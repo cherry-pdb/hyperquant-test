@@ -35,6 +35,11 @@ public class BitfinexConnector : ITestConnector
         return await _restClient.GetCandleSeriesAsync(pair, periodInSec, count, from, to);
     }
 
+    public async Task<Dictionary<string, decimal>> GetTickersAsync(string[] pairs)
+    {
+        return await _restClient.GetTickersAsync(pairs);
+    }
+
     #endregion
 
     #region WebSocket

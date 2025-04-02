@@ -13,6 +13,7 @@ public interface ITestConnector
         long? count,
         DateTimeOffset? from,
         DateTimeOffset? to = null); // change the order of args because initialized args should be in the end
+    Task<Dictionary<string, decimal>> GetTickersAsync(string[] pairs);
 
     #endregion
 

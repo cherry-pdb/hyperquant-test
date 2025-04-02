@@ -55,4 +55,24 @@ public static class JsonConverter
 
         return candleList;
     }
+
+    public static Dictionary<string, decimal> ConvertTickersToPricesCollection(string json)
+    {
+        using var jsonDocument = JsonDocument.Parse(json);
+        var root = jsonDocument.RootElement;
+        var prices = new Dictionary<string, decimal>();
+
+        foreach (var arrayElement in root.EnumerateArray())
+        {
+            if (arrayElement.ValueKind == JsonValueKind.Array && arrayElement.GetArrayLength() >= 2)
+            {
+                var pair = arrayElement[0].GetString()!;
+                var price = arrayElement[1].GetDecimal();
+
+                prices.Add(pair, price);
+            }
+        }
+
+        return prices;
+    }
 }
