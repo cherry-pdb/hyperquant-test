@@ -1,13 +1,11 @@
-﻿using System.Text.Json;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using TestHQ.Core.Configurations;
 using TestHQ.Core.Helpers;
-using TestHQ.Core.Interfaces;
 using TestHQ.Core.Models;
 
 namespace TestHQ.Core.Clients;
 
-public class BitfinexRestClient : ITestConnector
+public class BitfinexRestClient
 {
     private readonly HttpClient _httpClient;
     private readonly BitfinexConfiguration _configuration;
@@ -18,11 +16,18 @@ public class BitfinexRestClient : ITestConnector
         _configuration = bitfinexOptions.Value;
     }
 
+    #region API Methods
+
     public async Task<IEnumerable<Trade>> GetNewTradesAsync(string pair, int maxCount)
     {
-        var url = $"{_configuration.BaseUrl}/trades/{pair}/hist?limit={maxCount}";
+        var url = new UrlBuilder(_configuration.BaseUrl)
+            .AddPath("trades")
+            .AddPath(pair)
+            .AddPath("hist")
+            .AddParameter("limit", maxCount.ToString())
+            .Build();
         var response = await _httpClient.GetStringAsync(url);
-        var trades = JsonSerializer.Deserialize<IEnumerable<Trade>>(response) ?? [];
+        var trades = JsonConverter.ConvertTradesToCollection(pair, response);
         
         return trades;
     }
@@ -35,22 +40,14 @@ public class BitfinexRestClient : ITestConnector
             .AddPath($"trade:{periodForUrl}:{pair}")
             .AddPath("hist")
             .AddParameter("limit", count.ToString())
+            .AddParameter("start", from?.ToUnixTimeMilliseconds().ToString())
+            .AddParameter("end", to?.ToUnixTimeMilliseconds().ToString())
             .Build();
         var response = await _httpClient.GetStringAsync(url);
-        var candles = JsonSerializer.Deserialize<IEnumerable<Candle>>(response) ?? [];
+        var candles = JsonConverter.ConvertCandlesToCollection(pair, response);
         
         return candles;
     }
 
-    public event Action<Trade>? NewBuyTrade;
-    public event Action<Trade>? NewSellTrade;
-    public void SubscribeTrades(string pair, int maxCount = 100) {}
-
-    public void UnsubscribeTrades(string pair) {}
-
-    public event Action<Candle>? CandleSeriesProcessing;
-
-    public void SubscribeCandles(string pair, int periodInSec, long? count, DateTimeOffset? from = null, DateTimeOffset? to = null) {}
-
-    public void UnsubscribeCandles(string pair) {}
+    #endregion
 }
