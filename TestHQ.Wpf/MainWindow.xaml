@@ -1,0 +1,33 @@
+﻿<Window x:Class="TestHQ.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Crypto Portfolio" Height="400" Width="500">
+    <StackPanel>
+        <TextBlock Text="Table with portfolio" 
+                   FontSize="15" 
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   Margin="10"/>
+        <DataGrid x:Name="PortfolioDataGrid" AutoGenerateColumns="False" Margin="10" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Currency" Binding="{Binding Currency}" Width="*"/>
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="*"/>
+                <DataGridTextColumn Header="ValueInUSD" Binding="{Binding ValueInUSD}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Text="Total sum in different tokens" 
+                   FontSize="15" 
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   Margin="10"/>
+        <DataGrid x:Name="PortfolioTotalDataGrid" AutoGenerateColumns="false" Margin="10" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Token" Binding="{Binding Token}" Width="*"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</Window>
